@@ -2,9 +2,11 @@
 
 include dirname(__FILE__) . '/Route.php';
 
-Route::get('/hello/user', function (){
-	echo "Hello there!";
-});
+
+
+//require_once dirname(__FILE__) . '/Route.php';
+
+Route::get('/hello/user', 'dsds');
 
 Route::post('/hello/user', function (){
 	echo "No POST requests allowed for this endpoint.";

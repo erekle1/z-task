@@ -1,30 +1,46 @@
 <?php
 
-require_once 'RouteMethods.php';
+require_once 'RouteMethod.php';
 
-Class Route
+class Route
 {
 	
 	
+	/**
+	 * @var null
+	 */
 	private static $instance = null;
 	
-	 public static function getRouteMethodInstance( $arguments )
+	
+	/**
+	 * It Creates object of RouteMethod class at once and uses it ( Singleton Pattern )
+	 * @param $arguments
+	 * @return RouteMethodsInterface
+	 */
+	public static function getRouteMethodInstance( $arguments ) : RouteMethodsInterface
 	{
+		
 		if ( self::$instance === null )
 		{
-			self::$instance = new RouteMethods( $arguments[0], $arguments[1] );
+			self::$instance = new RouteMethod( $arguments[0], $arguments[1] );
 		}
 		else{
 			self::$instance->setRouteString($arguments[0]);
 			self::$instance->setCallback($arguments[1]);
 		}
-		
 		return self::$instance;
 	}
 	
-	public static function __callStatic( $name, $arguments )
+	/**
+	 * Via CallStatic method every public methods from the RouteMethod class will be invoked statically
+	 * @param string $name
+	 * @param array $arguments
+	 * @return mixed
+	 */
+	public static function __callStatic( string $name, array $arguments )
 	{
-		$routeMethods = self::getRouteMethodInstance( $arguments );
+		
+		$routeMethods = self::getRouteMethodInstance($arguments );
 		
 		return call_user_func_array( [$routeMethods, $name], $arguments );
 		
