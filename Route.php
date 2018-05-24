@@ -15,9 +15,9 @@ class Route
 	/**
 	 * It Creates object of RouteMethod class at once and uses it ( Singleton Pattern )
 	 * @param $arguments
-	 * @return RouteMethodsInterface
+	 * @return RouteMethodInterface
 	 */
-	public static function getRouteMethodInstance( $arguments ) : RouteMethodsInterface
+	public static function getRouteMethodInstance( $arguments ) : RouteMethodInterface
 	{
 		
 		if ( self::$instance === null )
@@ -32,7 +32,7 @@ class Route
 	}
 	
 	/**
-	 * Via CallStatic method every public methods from the RouteMethod class will be invoked statically
+	 * By CallStatic method every public methods from the RouteMethod class will be invoked statically
 	 * @param string $name
 	 * @param array $arguments
 	 * @return mixed
@@ -40,7 +40,14 @@ class Route
 	public static function __callStatic( string $name, array $arguments )
 	{
 		
-		$routeMethods = self::getRouteMethodInstance($arguments );
+		try{
+			$routeMethods = self::getRouteMethodInstance($arguments );
+		}
+		catch (Throwable $exception)
+		{
+			echo $exception->getMessage();
+		}
+	
 		
 		return call_user_func_array( [$routeMethods, $name], $arguments );
 		

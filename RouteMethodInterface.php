@@ -6,11 +6,20 @@
  * Time: 3:52 PM
  */
 
-interface RouteMethodsInterface
+interface RouteMethodInterface
 {
+	/**
+	 * @param string $uri
+	 * @param Closure $callback
+	 * @return mixed
+	 */
 	public function get( string $uri, Closure $callback );
 	
+	/**
+	 * @param string $uri
+	 * @param Closure $callback
+	 * @return mixed
+	 */
 	public function post( string $uri, Closure $callback );
-	
 	
 }

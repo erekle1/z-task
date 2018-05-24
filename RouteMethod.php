@@ -1,43 +1,44 @@
 <?php
 
-require_once 'RouteMethodsInterface.php';
+require_once 'RouteMethodInterface.php';
 
-class RouteMethod implements RouteMethodsInterface
+class RouteMethod implements RouteMethodInterface
 {
 	
 	private $requestMethod;
 	private $requestUri;
-	public $routeString;
+	private $routeString;
 	private $callback;
 	static $requestMethods = ['POST', 'GET'];
 	
 	public function __construct( string $routeString, Closure $callback )
 	{
-		$this->callback      = $callback;
-		$this->routeString   = $routeString;
+		$this->setRouteString( $routeString );
+		$this->setCallback( $callback );
 		$this->requestMethod = $_SERVER['REQUEST_METHOD'];
 		$this->requestUri    = $_SERVER['REQUEST_URI'];
 	}
 	
+	/**
+	 * @param Closure $callBackFunction
+	 */
 	public function setCallback( Closure $callBackFunction ): void
 	{
 		$this->callback = $callBackFunction;
 	}
 	
+	/**
+	 * @param string $routeString
+	 */
 	public function setRouteString( string $routeString ): void
 	{
-		try {
-			if ( $routeString === null ) {
-				throw new InvalidArgumentException( 'Route is null' );
-			} else {
-				$this->routeString = $routeString;
-			}
-		} catch ( InvalidArgumentException $exception ) {
-			echo $exception->getMessage();
-		}
 		
+		$this->routeString = trim( $routeString );
 	}
 	
+	/**
+	 * @param string $requestMethod
+	 */
 	public function setRequestMethod( string $requestMethod ): void
 	{
 		try {
@@ -52,24 +53,38 @@ class RouteMethod implements RouteMethodsInterface
 		
 	}
 	
+	/**
+	 * @param string $uri
+	 * @param Closure $callback
+	 * @return mixed
+	 */
 	public function get( string $uri, Closure $callback )
 	{
 		return $this->request( 'GET', $uri, $callback );
 	}
 	
+	/**
+	 * @param string $uri
+	 * @param Closure $callback
+	 * @return mixed
+	 */
 	public function post( string $uri, Closure $callback )
 	{
 		return $this->request( 'POST', $uri, $callback );
 	}
 	
-	protected function request( $method, $URI, $callback )
+	/**
+	 * @param string $method
+	 * @param string $URI
+	 * @param $callback
+	 * @return mixed
+	 */
+	protected function request( string $method, string $URI, $callback )
 	{
 		if ( $this->requestMethod == $method && $URI == $this->requestUri ) {
 			return call_user_func( $this->callback );
 		}
 	}
-	
-	
 	
 	
 }
